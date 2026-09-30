@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f7f7f4">
+  <meta name="description" content="JevVLA: Jev-inspired energy-based adaptation for vision-language-action policies. One lightweight preference function for candidate selection and continuous action guidance.">
+  <meta property="og:title" content="JevVLA — One energy. Two ways to act.">
+  <meta property="og:description" content="A lightweight decision core for vision-language-action policies. Explore the method, architecture, and results across five manipulation benchmarks.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://zju4embodiedai.github.io/JevVLA/">
+  <meta property="og:image" content="https://zju4embodiedai.github.io/JevVLA/assets/social.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <title>JevVLA — One energy. Two ways to act.</title>
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+  <link rel="preload" href="assets/fonts/URWGothic-Demi.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/robot-selected.webp" as="image">
+  <link rel="stylesheet" href="style.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <a class="nav-brand" href="#" aria-label="JevVLA home"><img src="assets/wordmark.svg" width="120" height="25" alt="JevVLA"></a>
+    <nav aria-label="Main navigation">
+      <a href="#idea">The idea</a><a href="#method">Method</a><a href="#results">Results</a>
+      <a class="nav-code" href="https://github.com/ZJU4EmbodiedAI/JevVLA" target="_blank" rel="noopener noreferrer">Code <span aria-hidden="true">↗</span></a>
+    </nav>
+    <span class="reading-progress" aria-hidden="true"></span>
+  </header>
+  <main id="main">
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero-index"><span class="red-dot"></span> VISION · LANGUAGE · ACTION <span class="hero-edition">A Jev-inspired decision core</span></div>
+      <h1 id="hero-title" class="hero-wordmark"><img src="assets/wordmark.svg" width="840" height="171" alt="JevVLA"></h1>
+      <p class="hero-paper-title">Jev-Inspired Energy-Based Adaptation<br>for Vision-Language-Action Policies</p>
+      <div class="hero-copy">
+        <h2>One energy.<br>Two ways to act.</h2>
+        <p>A lightweight preference model that selects better proposals and guides continuous robot actions.</p>
+        <div class="hero-actions"><a class="button button-dark" href="#method">Explore the method <span aria-hidden="true">↘</span></a><a class="text-link" href="https://github.com/ZJU4EmbodiedAI/JevVLA" target="_blank" rel="noopener noreferrer">GitHub <span aria-hidden="true">↗</span></a></div>
+      </div>
+      <figure class="hero-scene">
+        <div class="scene-coordinate" aria-hidden="true">+ <span>OBSERVATION → ACTION</span></div>
+        <svg class="scene-lines" viewBox="0 0 800 600" aria-hidden="true"><path class="path-ghost" d="M200 410 C250 335 375 445 548 350"/><path class="path-ghost" d="M200 410 C295 265 400 355 570 270"/><path class="path-main" d="M200 410 C335 445 445 430 602 350"/><circle class="path-point" cx="602" cy="350" r="6"/><circle class="target-ring" cx="602" cy="350" r="17"/></svg>
+        <img class="robot-image" src="assets/robot-selected.webp" alt="A robot arm moving a red block over a placement tray" width="1006" height="708" fetchpriority="high">
+        <figcaption><span class="red-dot"></span> OBSERVE. PREFER. ACT.</figcaption>
+      </figure>
+      <div class="hero-bottom"><a href="#idea">SCROLL TO EXPLORE <span aria-hidden="true">↓</span></a><span>Frozen policy. Learned preferences.</span><span class="hero-bottom-index">JEVVLA / 01</span></div>
+    </section>
+    <section class="idea section-pad" id="idea" aria-labelledby="idea-title">
+      <div class="section-eyebrow reveal"><span>01 / THE IDEA</span><span>LIGHTWEIGHT BY DESIGN</span></div>
+      <div class="idea-heading reveal"><h2 id="idea-title">A small model.<br>A different decision.</h2><p>A pretrained policy already knows a great deal about acting. JevVLA learns which of its actions to prefer—and how to adjust them—while keeping the base policy frozen.</p></div>
+      <div class="idea-details reveal">
+        <div class="parameter-count"><span class="number">79<span class="number-comma">,</span>817</span><span>trainable parameters in the shared core</span></div>
+        <div class="idea-description"><h3>Inspired by Jev. Built for robot action.</h3><p>Jev's structured, probabilistic decision interface motivates a simple idea: learn preferences over possible actions. JevVLA expresses those preferences as a differentiable scalar energy, conditioned on the observation, task context, and action.</p><p>Its values support candidate selection. Its gradients support continuous guidance. Pick-and-place decisions and action chunks share the same core architecture, with separately trained weights for each benchmark.</p></div>
+      </div>
+      <div class="principles reveal"><span><b>01</b> Freeze the base policy</span><span><b>02</b> Learn action preferences</span><span><b>03</b> Select or guide</span></div>
+    </section>
+    <section class="method section-pad" id="method" aria-labelledby="method-title">
+      <div class="section-eyebrow reveal"><span>02 / THE MECHANISM</span><span>ONE SCALAR ENERGY · E(c, a)</span></div>
+      <div class="method-layout">
+        <div class="method-copy reveal">
+          <h2 id="method-title">One field.<br><span>Two interfaces.</span></h2><p class="method-intro">A shared preference function connects discrete decisions and continuous motion.</p>
+          <div class="mode-copy" id="selection-copy"><span class="mode-number">01 — SELECT</span><h3>Compare the possibilities.</h3><p>Combine learned energy with the policy's proposal probabilities. Select a preferred candidate, then execute it.</p><p class="equation">p(a | c) ∝ p₀(a | c) exp(−βE(c, a))</p></div>
+          <div class="mode-copy" id="guidance-copy" hidden><span class="mode-number">02 — GUIDE</span><h3>Refine the movement.</h3><p>Differentiate the same energy with respect to the action. Apply bounded corrections to an action or guide a chunk during generation.</p><p class="equation">a′ = a − η ∇<sub>a</sub>E(c, a)</p></div>
+        </div>
+        <div class="interactive-model reveal">
+          <div class="mode-tabs" role="tablist" aria-label="Action interface"><button id="select-tab" role="tab" aria-selected="true" aria-controls="select-panel" tabindex="0" data-mode="selection">Candidate selection <span>↗</span></button><button id="guide-tab" role="tab" aria-selected="false" aria-controls="guide-panel" tabindex="-1" data-mode="guidance">Continuous guidance <span>↗</span></button></div>
+          <div class="model-stage">
+            <div id="select-panel" role="tabpanel" aria-labelledby="select-tab">
+              <svg id="selection-graphic" viewBox="0 0 700 400" role="img" aria-label="Three proposed actions are scored by energy and policy prior to select an action">
+                <text x="32" y="35" class="svg-micro">FROZEN POLICY</text><text x="660" y="35" class="svg-micro" text-anchor="end">LEARNED PREFERENCE</text>
+                <path class="branch branch-0" d="M82 211 C160 211 155 93 300 93 L525 93"/><path class="branch branch-1" d="M82 211 L525 211"/><path class="branch branch-2" d="M82 211 C160 211 155 329 300 329 L525 329"/>
+                <circle class="origin-node" cx="82" cy="211" r="26"/><path d="M73 204L85 211L73 218M83 204L95 211L83 218" class="origin-symbol"/>
+                <g class="candidate-node" data-candidate="0"><circle cx="300" cy="93" r="27"/><text x="300" y="99" text-anchor="middle">a₁</text><text class="probability" x="371" y="99">32%</text><text class="energy-label" x="258" y="143">E = 1.40</text></g>
+                <g class="candidate-node" data-candidate="1"><circle cx="300" cy="211" r="27"/><text x="300" y="217" text-anchor="middle">a₂</text><text class="probability" x="371" y="217">29%</text><text class="energy-label" x="258" y="261">E = 0.90</text></g>
+                <g class="candidate-node" data-candidate="2"><circle cx="300" cy="329" r="27"/><text x="300" y="335" text-anchor="middle">a₃</text><text class="probability" x="371" y="335">39%</text><text class="energy-label" x="258" y="379">E = 0.15</text></g>
+                <g id="selected-indicator"><path d="M545 93h20M555 83v20"/><text x="579" y="98">SELECTED</text></g>
+              </svg>
+            </div>
+            <div id="guide-panel" role="tabpanel" aria-labelledby="guide-tab" hidden>
+              <svg id="guidance-graphic" viewBox="0 0 700 400" role="img" aria-label="Energy gradients bend a proposed action sequence toward a preferred region">
+                <defs><marker id="gradient-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="4" markerHeight="4" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#ff4b3e"/></marker></defs>
+                <text x="32" y="35" class="svg-micro">ACTION SPACE</text><text x="660" y="35" class="svg-micro" text-anchor="end">−∇E(c, a)</text>
+                <path d="M65 345H640M65 345V75" class="plot-axis"/><path d="M100 285C235 95 360 332 610 220" class="base-trajectory"/><path id="guided-trajectory" class="guided-trajectory" d="M100 285C235 65 360 210 610 95"/>
+                <g id="gradient-vectors"></g><g id="guided-points"></g>
+                <circle cx="610" cy="95" r="26" class="goal-region"/><circle cx="610" cy="95" r="3" fill="#ff4b3e"/><text x="610" y="57" class="svg-micro" text-anchor="end">LOWER ENERGY</text><text x="99" y="317" class="svg-micro">PROPOSED ACTION</text><text x="340" y="380" class="svg-micro">BOUNDED LOCAL CORRECTIONS</text>
+              </svg>
+            </div>
+          </div>
+          <div class="model-control"><label for="guidance-strength"><span id="strength-label">Energy weight</span><output id="strength-value" for="guidance-strength">1.00</output></label><input id="guidance-strength" type="range" min="0" max="2" step="0.05" value="1" aria-describedby="model-note"></div>
+          <div class="model-note" id="model-note"><span class="red-dot"></span> Interactive method illustration <span id="model-state" aria-live="polite">Action a₃ selected</span></div>
+        </div>
+      </div>
+      <div class="method-footer reveal"><span>Same architecture</span><span>Candidate probabilities</span><span>Action gradients</span><span>Benchmark-specific weights</span></div>
+    </section>
+    <section class="architecture section-pad" id="architecture" aria-labelledby="architecture-title">
+      <div class="section-eyebrow reveal"><span>03 / INSIDE JEVVLA</span><span>CONTEXT → ENERGY → ACTION</span></div>
+      <div class="section-heading reveal"><h2 id="architecture-title">The decision core,<br>made compact.</h2><p>A context-conditioned quadratic energy captures structured action preferences. An MLP residual adds flexibility. Both selection and guidance use this same scalar output.</p></div>
+      <div class="architecture-spec reveal"><span><strong>128</strong> context dimensions</span><span><strong>32</strong> action features</span><span><strong>8</strong> quadratic rank</span><span><strong>≈80K</strong> parameters</span></div>
+      <button class="figure-button reveal" data-figure="assets/architecture.webp" data-caption="JevVLA architecture: frozen proposals, preference supervision, and one energy core for selection and continuous guidance." aria-label="Enlarge the JevVLA architecture figure"><img src="assets/architecture.webp" width="2048" height="1138" loading="lazy" alt="JevVLA architecture with frozen policy inputs, preference learning, a shared energy network, candidate selection, and gradient guidance"><span class="enlarge-label">EXPLORE THE ARCHITECTURE <span aria-hidden="true">↗</span></span></button>
+      <div class="architecture-bottom reveal"><p>Execution outcomes, expert corrections, and demonstration-derived preferences provide supervision for the shared decision core.</p><a class="text-link" href="https://github.com/ZJU4EmbodiedAI/JevVLA/blob/main/src/jevvla/model.py" target="_blank" rel="noopener noreferrer">View the model <span aria-hidden="true">↗</span></a></div>
+    </section>
+    <section class="results section-pad" id="results" aria-labelledby="results-title">
+      <div class="section-eyebrow reveal"><span>04 / THE RESULTS</span><span>FIVE MANIPULATION BENCHMARKS</span></div>
+      <div class="section-heading reveal"><h2 id="results-title">Small core.<br><span class="text-red">Consistent gains.</span></h2><p>One architecture improves task success across five benchmarks, covering pick-and-place manipulation and continuous control.</p></div>
+      <div class="result-legend reveal"><span><i class="legend-direct"></i> Direct</span><span><i class="legend-jevvla"></i> JevVLA</span><span class="legend-unit">Task success (%) / gain in percentage points</span></div>
+      <div class="results-table reveal" role="table" aria-label="Task success across five benchmarks">
+        <div class="result-head" role="row"><span role="columnheader">Benchmark / base policy</span><span role="columnheader">Task success · 0–100%</span><span role="columnheader">Direct</span><span role="columnheader">JevVLA</span><span role="columnheader">Gain</span></div>
+        <div class="result-row" role="row" style="--direct:75.84%;--ours:77.12%"><div role="cell"><h3>MetaWorld <span>MT50</span></h3><p>π₀.₅–MT50</p></div><div class="result-bars" role="cell" aria-label="Direct 75.84%, JevVLA 77.12%"><span class="bar-direct"></span><span class="bar-ours"></span></div><span class="result-direct" role="cell">75.84</span><strong role="cell">77.12</strong><span class="result-gain" role="cell">+1.28 <small>pp</small></span></div>
+        <div class="result-row" role="row" style="--direct:84.77%;--ours:87.08%"><div role="cell"><h3>VIMA <span>L1</span></h3><p>VIMA-200M</p></div><div class="result-bars" role="cell" aria-label="Direct 84.77%, JevVLA 87.08%"><span class="bar-direct"></span><span class="bar-ours"></span></div><span class="result-direct" role="cell">84.77</span><strong role="cell">87.08</strong><span class="result-gain" role="cell">+2.31 <small>pp</small></span></div>
+        <div class="result-row" role="row" style="--direct:78%;--ours:79.6%"><div role="cell"><h3>LanguageTable</h3><p>Language BC</p></div><div class="result-bars" role="cell" aria-label="Direct 78.00%, JevVLA 79.60%"><span class="bar-direct"></span><span class="bar-ours"></span></div><span class="result-direct" role="cell">78.00</span><strong role="cell">79.60</strong><span class="result-gain" role="cell">+1.60 <small>pp</small></span></div>
+        <div class="result-row" role="row" style="--direct:78.63%;--ours:80.15%"><div role="cell"><h3>LIBERO <span>Plus</span></h3><p>π₀.₅–LIBERO</p></div><div class="result-bars" role="cell" aria-label="Direct 78.63%, JevVLA 80.15%"><span class="bar-direct"></span><span class="bar-ours"></span></div><span class="result-direct" role="cell">78.63</span><strong role="cell">80.15</strong><span class="result-gain" role="cell">+1.52 <small>pp</small></span></div>
+        <div class="result-row" role="row" style="--direct:34.22%;--ours:35.5%"><div role="cell"><h3>CLIPort</h3><p>CLIPort</p></div><div class="result-bars" role="cell" aria-label="Direct 34.22%, JevVLA 35.50%"><span class="bar-direct"></span><span class="bar-ours"></span></div><span class="result-direct" role="cell">34.22</span><strong role="cell">35.50</strong><span class="result-gain" role="cell">+1.28 <small>pp</small></span></div>
+      </div>
+      <p class="results-note reveal">Each benchmark uses its corresponding frozen base policy and independently trained JevVLA weights. CLIPort reports strict task success.</p>
+    </section>
+    <section class="overview section-pad" aria-labelledby="overview-title">
+      <div class="section-eyebrow reveal"><span>05 / THE COMPLETE PICTURE</span><span>LEARN · SELECT · REFINE</span></div>
+      <div class="section-heading reveal"><h2 id="overview-title">From preference<br>to action.</h2><p>Feedback shapes the energy. The learned field then improves action choice through its values and action refinement through its gradients.</p></div>
+      <button class="figure-button reveal" data-figure="assets/teaser.webp" data-caption="JevVLA overview: one learned action preference function supports candidate selection and continuous refinement." aria-label="Enlarge the JevVLA overview figure"><img src="assets/teaser.webp" width="2048" height="1107" loading="lazy" alt="JevVLA overview illustrating preference learning, frozen policy proposals, action selection, and continuous refinement"><span class="enlarge-label">VIEW FULL OVERVIEW <span aria-hidden="true">↗</span></span></button>
+    </section>
+    <section class="code-section section-pad" id="code" aria-labelledby="code-title">
+      <div class="section-eyebrow reveal"><span>06 / BUILD WITH JEVVLA</span><span>PYTORCH + JAX</span></div>
+      <div class="code-layout reveal"><div><h2 id="code-title">A shared core.<br>Your next policy.</h2><p>Explore the energy model, train an adapter, and connect it to your robot policy.</p><a class="button button-red" href="https://github.com/ZJU4EmbodiedAI/JevVLA" target="_blank" rel="noopener noreferrer">Explore the repository <span aria-hidden="true">↗</span></a></div><div class="code-block"><div class="code-topline"><span>GET STARTED</span><button id="copy-code" type="button" aria-label="Copy installation commands">Copy <span aria-hidden="true">↗</span></button></div><pre><code id="install-code">git clone https://github.com/ZJU4EmbodiedAI/JevVLA.git
+cd JevVLA
+pip install .</code></pre><div class="code-links"><a href="https://github.com/ZJU4EmbodiedAI/JevVLA#training" target="_blank" rel="noopener noreferrer">Training ↗</a><a href="https://github.com/ZJU4EmbodiedAI/JevVLA#closed-loop-evaluation" target="_blank" rel="noopener noreferrer">Evaluation ↗</a><span id="copy-status" role="status"></span></div></div></div>
+    </section>
+  </main>
+  <footer class="site-footer"><img src="assets/wordmark.svg" alt="JevVLA" width="160" height="33"><p>Jev-inspired energy adaptation<br>for vision-language-action policies.</p><a href="https://github.com/ZJU4EmbodiedAI" target="_blank" rel="noopener noreferrer">ZJU4EmbodiedAI <span aria-hidden="true">↗</span></a><a href="#" class="back-top">Back to top ↑</a></footer>
+  <dialog id="figure-dialog" aria-label="Expanded project figure"><div class="dialog-toolbar"><span>JEVVLA / RESEARCH FIGURE</span><button id="close-figure" aria-label="Close expanded figure">Close <span aria-hidden="true">×</span></button></div><div class="dialog-image"><img id="expanded-figure" alt=""></div><p id="figure-caption"></p></dialog>
+</body>
+</html>

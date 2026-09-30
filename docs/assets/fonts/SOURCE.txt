@@ -1,0 +1,4 @@
+URW Gothic by URW and Artifex Software.
+Source: https://github.com/ArtifexSoftware/urw-base35-fonts
+Original OTF sources are included. WOFF2 files are format conversions of these sources.
+See LICENSE.txt and COPYING.txt for license terms.
