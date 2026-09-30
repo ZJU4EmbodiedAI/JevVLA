@@ -172,3 +172,13 @@ The evaluator supports four- and five-value step returns and reports episode cou
 - [training.py](src/jevvla/training.py): optimization, validation selection, and checkpoint export.
 - [adapters](src/jevvla/adapters): benchmark encoders, feedback preparation, and policy integration.
 - [evaluation.py](src/jevvla/evaluation.py): closed-loop rollout and candidate-record evaluation.
+
+## Project website
+
+The [project website](docs/index.html) includes an interactive method illustration, benchmark results, and expandable research figures. Preview it locally:
+
+```bash
+python -m http.server 8000 --directory docs
+```
+
+Open `http://localhost:8000`. The site is ready for GitHub Pages using the `main` branch and the `/docs` directory.

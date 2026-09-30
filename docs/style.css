@@ -19,3 +19,5 @@ dialog{border:0;padding:0;width:min(95vw,1600px);max-width:1600px;max-height:94s
 
 .hero-scene figcaption{z-index:5;bottom:-6px}.candidate-node .probability{paint-order:stroke;stroke:#171817;stroke-width:8px;stroke-linejoin:round}
 @media(max-width:760px) and (max-height:740px){.hero{min-height:600px;height:calc(100svh - var(--header))}.hero-wordmark{top:58px;width:84%}.hero-paper-title{top:calc(65px + 17vw);font-size:10px}.hero-scene{top:168px;width:77%;right:-11%}.hero-copy{bottom:77px}.hero-copy h2{font-size:30px}.hero-copy p{font-size:12px;line-height:1.6;margin-top:12px;max-width:290px}.hero-actions{margin-top:16px}.hero-bottom{height:51px}}
+
+@media(max-width:760px){.robot-image{transform:none}}

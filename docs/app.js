@@ -21,6 +21,9 @@ function updateScroll() {
   if (!reducedMotion.matches && window.innerWidth > 760 && window.scrollY < hero.offsetHeight) {
     robot.style.setProperty('--scene-shift', `${window.scrollY * 0.07}px`);
   }
+  if (window.scrollY < hero.offsetHeight * 0.5) {
+    document.querySelectorAll('.site-header nav a').forEach(link => link.classList.remove('active'));
+  }
   scrollScheduled = false;
 }
 window.addEventListener('scroll', () => {
@@ -65,9 +68,14 @@ function updateIllustration() {
     const weights = logits.map(value => Math.exp(value - normalizer));
     const total = weights.reduce((a, b) => a + b, 0);
     const selected = logits.indexOf(Math.max(...logits));
+    const percentages = weights.map(value => 100 * value / total);
+    const displayed = percentages.map(value => Math.floor(value));
+    const order = percentages.map((value, index) => ({ index, fraction: value - displayed[index] })).sort((a, b) => b.fraction - a.fraction);
+    const remainder = 100 - displayed.reduce((a, b) => a + b, 0);
+    for (let index = 0; index < remainder; index++) displayed[order[index].index] += 1;
     document.querySelectorAll('.candidate-node').forEach((node, index) => {
       node.classList.toggle('is-selected', index === selected);
-      node.querySelector('.probability').textContent = `${Math.round(100 * weights[index] / total)}%`;
+      node.querySelector('.probability').textContent = `${displayed[index]}%`;
       document.querySelector(`.branch-${index}`).classList.toggle('is-selected', index === selected);
     });
     document.querySelector('#selected-indicator').setAttribute('transform', `translate(0 ${118 * selected})`);
