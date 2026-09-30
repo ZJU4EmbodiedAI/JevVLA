@@ -4,6 +4,8 @@
 
 <h2 align="center">Jev-Inspired Energy-Based Adaptation for Vision-Language-Action Policies</h2>
 
+<p align="center"><a href="https://zju4embodiedai.github.io/JevVLA/">Project website</a> · <a href="#installation">Installation</a> · <a href="#training">Training</a></p>
+
 JevVLA learns a lightweight action preference function on top of a frozen vision-language-action policy. The same conditional energy architecture selects among proposed actions and guides continuous actions through its gradients, supporting both pick-and-place decisions and action chunks.
 
 Inspired by Jev's probabilistic decision-graph ideas, JevVLA turns feedback about alternative actions into a reusable preference field. Benchmark adapters encode policy features and actions into a shared interface; each benchmark trains its own energy weights.
@@ -175,7 +177,7 @@ The evaluator supports four- and five-value step returns and reports episode cou
 
 ## Project website
 
-The [project website](docs/index.html) includes an interactive method illustration, benchmark results, and expandable research figures. Preview it locally:
+The [project website](https://zju4embodiedai.github.io/JevVLA/) includes an interactive method illustration, benchmark results, and expandable research figures. Preview it locally:
 
 ```bash
 python -m http.server 8000 --directory docs
