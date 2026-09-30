@@ -16,14 +16,16 @@
   <link rel="preload" href="assets/fonts/URWGothic-Demi.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/robot-selected.webp" as="image">
   <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="experiences.css">
   <script src="app.js" defer></script>
+  <script src="experiences.js" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
   <header class="site-header">
     <a class="nav-brand" href="#" aria-label="JevVLA home"><img src="assets/wordmark.svg" width="120" height="25" alt="JevVLA"></a>
     <nav aria-label="Main navigation">
-      <a href="#idea">The idea</a><a href="#method">Method</a><a href="#results">Results</a>
+      <a href="#idea">The idea</a><a href="#method">Method</a><a href="#cases">Cases</a><a href="#action-lab">3D lab</a><a href="#results">Results</a>
       <a class="nav-code" href="https://github.com/ZJU4EmbodiedAI/JevVLA" target="_blank" rel="noopener noreferrer">Code <span aria-hidden="true">↗</span></a>
     </nav>
     <span class="reading-progress" aria-hidden="true"></span>
@@ -93,15 +95,41 @@
       </div>
       <div class="method-footer reveal"><span>Same architecture</span><span>Candidate probabilities</span><span>Action gradients</span><span>Benchmark-specific weights</span></div>
     </section>
+    <section class="action-lab section-pad" id="action-lab" aria-labelledby="lab-title">
+      <div class="section-eyebrow reveal"><span>03 / ACTION IN THREE DIMENSIONS</span><span>INTERACTIVE METHOD DEMO</span></div>
+      <div class="section-heading reveal"><h2 id="lab-title">See the decision.<br>Move around it.</h2><p>Follow a grasp from proposal to placement. Switch between candidate selection and continuous guidance, rotate the scene, or scrub through the movement.</p></div>
+      <div class="lab-toolbar reveal"><div class="lab-modes" role="group" aria-label="3D demonstration mode"><button type="button" data-lab-mode="selection" aria-pressed="true">01 / Select</button><button type="button" data-lab-mode="guidance" aria-pressed="false">02 / Guide</button></div><div class="lab-cameras" role="group" aria-label="Camera viewpoint"><button type="button" data-camera="perspective" aria-pressed="true">Perspective</button><button type="button" data-camera="top" aria-pressed="false">Top view</button><button type="button" data-camera="front" aria-pressed="false">Front</button></div></div>
+      <div class="lab-viewer reveal" id="robot-viewer" aria-busy="true">
+        <canvas id="robot-canvas" aria-label="Interactive 3D robot demonstration. Drag to orbit the camera, or use the viewpoint buttons." tabindex="0"></canvas>
+        <div class="lab-loading" id="lab-loading"><img src="assets/robot-selected.webp" alt="Robot moving a block toward a tray" width="500" height="352"><p id="lab-load-status">Preparing the 3D scene…</p></div>
+        <div class="lab-hud"><span><i class="red-dot"></i> JEVVLA / ACTION LAB</span><span id="lab-phase">Ready to grasp</span></div>
+        <div class="lab-annotations"><span><i class="lab-legend-red"></i> Preferred trajectory</span><span><i class="lab-legend-gray"></i> Alternatives</span></div>
+        <div class="lab-drag-hint">DRAG TO ROTATE <span aria-hidden="true">↔</span></div>
+      </div>
+      <div class="lab-playback reveal"><button id="lab-play" type="button" disabled><span class="play-icon" aria-hidden="true">▶</span><span id="lab-play-label">Play movement</span></button><button id="lab-replay" type="button" disabled aria-label="Replay movement from the start">↺</button><label class="sr-only" for="lab-timeline">Animation progress</label><input id="lab-timeline" type="range" min="0" max="1000" value="0" disabled><output id="lab-progress" for="lab-timeline">00%</output></div>
+      <div class="lab-explanation reveal"><p id="lab-mode-description">The frozen policy proposes several actions. The energy model chooses one, and the robot carries out the selected grasp and placement.</p><span>3D method illustration<br>Orbit · Play · Scrub</span></div>
+    </section>
     <section class="architecture section-pad" id="architecture" aria-labelledby="architecture-title">
-      <div class="section-eyebrow reveal"><span>03 / INSIDE JEVVLA</span><span>CONTEXT → ENERGY → ACTION</span></div>
+      <div class="section-eyebrow reveal"><span>04 / INSIDE JEVVLA</span><span>CONTEXT → ENERGY → ACTION</span></div>
       <div class="section-heading reveal"><h2 id="architecture-title">The decision core,<br>made compact.</h2><p>A context-conditioned quadratic energy captures structured action preferences. An MLP residual adds flexibility. Both selection and guidance use this same scalar output.</p></div>
       <div class="architecture-spec reveal"><span><strong>128</strong> context dimensions</span><span><strong>32</strong> action features</span><span><strong>8</strong> quadratic rank</span><span><strong>≈80K</strong> parameters</span></div>
       <button class="figure-button reveal" data-figure="assets/architecture.webp" data-caption="JevVLA architecture: frozen proposals, preference supervision, and one energy core for selection and continuous guidance." aria-label="Enlarge the JevVLA architecture figure"><img src="assets/architecture.webp" width="2048" height="1138" loading="lazy" alt="JevVLA architecture with frozen policy inputs, preference learning, a shared energy network, candidate selection, and gradient guidance"><span class="enlarge-label">EXPLORE THE ARCHITECTURE <span aria-hidden="true">↗</span></span></button>
       <div class="architecture-bottom reveal"><p>Execution outcomes, expert corrections, and demonstration-derived preferences provide supervision for the shared decision core.</p><a class="text-link" href="https://github.com/ZJU4EmbodiedAI/JevVLA/blob/main/src/jevvla/model.py" target="_blank" rel="noopener noreferrer">View the model <span aria-hidden="true">↗</span></a></div>
     </section>
+    <section class="case-studies section-pad" id="cases" aria-labelledby="cases-title">
+      <div class="section-eyebrow reveal"><span>05 / IN THE ENVIRONMENT</span><span>RECORDED EVALUATION FRAMES</span></div>
+      <div class="section-heading reveal"><h2 id="cases-title">Same starting point.<br>A different outcome.</h2><p>Three selected episodes show how action preferences change execution. Step through paired frames from Direct and JevVLA.</p></div>
+      <div class="case-selector reveal" role="tablist" aria-label="Evaluation case"><button id="case-tab-0" type="button" role="tab" aria-selected="true" aria-controls="case-panel" tabindex="0" data-case="0"><span>01 / LanguageTable</span>Blue moon → red moon</button><button id="case-tab-1" type="button" role="tab" aria-selected="false" aria-controls="case-panel" tabindex="-1" data-case="1"><span>02 / LanguageTable</span>Yellow star → top right</button><button id="case-tab-2" type="button" role="tab" aria-selected="false" aria-controls="case-panel" tabindex="-1" data-case="2"><span>03 / CLIPort</span>Orange blocks → pink bowls</button></div>
+      <div id="case-panel" role="tabpanel" aria-labelledby="case-tab-0" class="reveal">
+        <div class="case-instruction"><h3 id="case-instruction">“put the blue moon towards the red moon”</h3><span id="case-meta">LanguageTable · seed 900003</span></div>
+        <div class="case-pair"><figure><div class="case-frame-label"><span>DIRECT</span><span id="case-direct-step">Step 200</span></div><div class="case-image-wrap"><img id="case-direct-image" src="assets/cases/blue-moon-direct-3.webp" width="640" height="360" loading="lazy" alt="Direct final state for the blue moon task"></div><figcaption id="case-direct-result">Not completed · 200 steps</figcaption></figure><figure class="case-ours"><div class="case-frame-label"><span>JEVVLA</span><span id="case-ours-step">Step 41</span></div><div class="case-image-wrap"><img id="case-ours-image" src="assets/cases/blue-moon-ours-3.webp" width="640" height="360" loading="lazy" alt="JevVLA final state for the blue moon task"></div><figcaption id="case-ours-result">Completed · 41 steps</figcaption></figure></div>
+        <div class="case-navigation"><button id="case-play" type="button">▶ Play frames</button><div id="case-stages" role="group" aria-label="Recorded frame stage"></div><span id="case-position" aria-live="polite">Final outcome</span></div>
+        <div class="case-description"><p id="case-summary">The same initial state leads to different outcomes after small action corrections. JevVLA completes the task at step 41; Direct reaches the 200-step limit.</p><span id="case-interface">Continuous guidance</span></div>
+        <div id="case-scores" class="case-scores" hidden><div><span>LEARNED PREFERENCE</span><p>Utility relative to Direct · higher is preferred</p></div><div id="candidate-scores"></div></div>
+      </div>
+    </section>
     <section class="results section-pad" id="results" aria-labelledby="results-title">
-      <div class="section-eyebrow reveal"><span>04 / THE RESULTS</span><span>FIVE MANIPULATION BENCHMARKS</span></div>
+      <div class="section-eyebrow reveal"><span>06 / THE RESULTS</span><span>FIVE MANIPULATION BENCHMARKS</span></div>
       <div class="section-heading reveal"><h2 id="results-title">Small core.<br><span class="text-red">Consistent gains.</span></h2><p>One architecture improves task success across five benchmarks, covering pick-and-place manipulation and continuous control.</p></div>
       <div class="result-legend reveal"><span><i class="legend-direct"></i> Direct</span><span><i class="legend-jevvla"></i> JevVLA</span><span class="legend-unit">Task success (%) / gain in percentage points</span></div>
       <div class="results-table reveal" role="table" aria-label="Task success across five benchmarks">
@@ -115,12 +143,12 @@
       <p class="results-note reveal">Each benchmark uses its corresponding frozen base policy and independently trained JevVLA weights. CLIPort reports strict task success.</p>
     </section>
     <section class="overview section-pad" aria-labelledby="overview-title">
-      <div class="section-eyebrow reveal"><span>05 / THE COMPLETE PICTURE</span><span>LEARN · SELECT · REFINE</span></div>
+      <div class="section-eyebrow reveal"><span>07 / THE COMPLETE PICTURE</span><span>LEARN · SELECT · REFINE</span></div>
       <div class="section-heading reveal"><h2 id="overview-title">From preference<br>to action.</h2><p>Feedback shapes the energy. The learned field then improves action choice through its values and action refinement through its gradients.</p></div>
       <button class="figure-button reveal" data-figure="assets/teaser.webp" data-caption="JevVLA overview: one learned action preference function supports candidate selection and continuous refinement." aria-label="Enlarge the JevVLA overview figure"><img src="assets/teaser.webp" width="2048" height="1107" loading="lazy" alt="JevVLA overview illustrating preference learning, frozen policy proposals, action selection, and continuous refinement"><span class="enlarge-label">VIEW FULL OVERVIEW <span aria-hidden="true">↗</span></span></button>
     </section>
     <section class="code-section section-pad" id="code" aria-labelledby="code-title">
-      <div class="section-eyebrow reveal"><span>06 / BUILD WITH JEVVLA</span><span>PYTORCH + JAX</span></div>
+      <div class="section-eyebrow reveal"><span>08 / BUILD WITH JEVVLA</span><span>PYTORCH + JAX</span></div>
       <div class="code-layout reveal"><div><h2 id="code-title">A shared core.<br>Your next policy.</h2><p>Explore the energy model, train an adapter, and connect it to your robot policy.</p><a class="button button-red" href="https://github.com/ZJU4EmbodiedAI/JevVLA" target="_blank" rel="noopener noreferrer">Explore the repository <span aria-hidden="true">↗</span></a></div><div class="code-block"><div class="code-topline"><span>GET STARTED</span><button id="copy-code" type="button" aria-label="Copy installation commands">Copy <span aria-hidden="true">↗</span></button></div><pre><code id="install-code">git clone https://github.com/ZJU4EmbodiedAI/JevVLA.git
 cd JevVLA
 pip install .</code></pre><div class="code-links"><a href="https://github.com/ZJU4EmbodiedAI/JevVLA#training" target="_blank" rel="noopener noreferrer">Training ↗</a><a href="https://github.com/ZJU4EmbodiedAI/JevVLA#closed-loop-evaluation" target="_blank" rel="noopener noreferrer">Evaluation ↗</a><span id="copy-status" role="status"></span></div></div></div>

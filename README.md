@@ -177,7 +177,7 @@ The evaluator supports four- and five-value step returns and reports episode cou
 
 ## Project website
 
-The [project website](https://zju4embodiedai.github.io/JevVLA/) includes an interactive method illustration, benchmark results, and expandable research figures. Preview it locally:
+The [project website](https://zju4embodiedai.github.io/JevVLA/) includes a 3D robot action lab, paired evaluation cases, an interactive energy illustration, benchmark results, and expandable research figures. Preview it locally:
 
 ```bash
 python -m http.server 8000 --directory docs
